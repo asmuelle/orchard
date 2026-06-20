@@ -1,4 +1,5 @@
 import Foundation
+import OrchardCrypto
 import OrchardNode
 import OrchardProtocol
 import OrchardRouter
@@ -131,6 +132,39 @@ for report in jobOutcome.results {
     case .noResults:
         print("  \(report.taskID): no results")
     }
+}
+
+// --- Secure-aggregation demo: server recovers the mean gradient, sees no raw gradient ---
+print("\n🌳 Orchard secure-aggregation demo")
+
+var dpRng = SeededGenerator(seed: 2026)
+let gradients = [
+    [0.8, -0.3, 1.2],
+    [0.6, -0.1, 0.9],
+    [0.7, -0.2, 1.0],
+    [0.9, 0.0, 1.1],
+]
+let cryptoConfig = FederatedConfig(clipNorm: 5, noiseSigma: 0.02, quantizationScale: 1_000_000)
+
+func format(_ values: [Double]) -> String {
+    "[" + values.map { String(format: "%.3f", $0) }.joined(separator: ", ") + "]"
+}
+
+do {
+    let secureMean = try FederatedRound.secureMean(
+        gradients: gradients,
+        config: cryptoConfig,
+        using: &dpRng
+    )
+    let plaintextMean = (0 ..< gradients[0].count).map { column in
+        gradients.reduce(0) { $0 + $1[column] } / Double(gradients.count)
+    }
+    print("  participants:    \(gradients.count) (raw gradients never leave a device)")
+    print("  plaintext mean:  \(format(plaintextMean))")
+    print("  secure DP mean:  \(format(secureMean))")
+    print("  → reconstructed from masked vectors only, with SecAgg + differential privacy")
+} catch {
+    print("  secure aggregation failed: \(error)")
 }
 
 // MARK: - Demo dispatcher

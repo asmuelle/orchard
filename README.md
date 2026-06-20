@@ -36,13 +36,15 @@ See [`DESIGN.md`](./DESIGN.md) for the full architecture and [`docs/`](./docs) f
 
 ## Status
 
-🌱 **M1–M3 landed.** `OrchardNode` ships a `NodeRuntime` actor that gates work behind the
+🌱 **M1–M4 landed.** `OrchardNode` ships a `NodeRuntime` actor that gates work behind the
 opportunistic scheduler and runs structured-output inference via Apple's Foundation Models on
 OS 26+ (deterministic stub fallback elsewhere). `OrchardSwarm` ships the micro-swarm coordination
 layer — peer discovery, coordinator election, and a memory-aware pipeline-parallel layer-shard
 planner. `OrchardRouter` ships the global layer — job fragmentation, redundant load-balanced
-assignment, and majority-vote consensus that outvotes and flags faulty nodes. The architecture
-blueprint is still evolving — see the [roadmap](./DESIGN.md#roadmap).
+assignment, and majority-vote consensus that outvotes and flags faulty nodes. `OrchardCrypto`
+ships the privacy layer — Bonawitz-style Secure Aggregation (Curve25519 + exact pairwise mask
+cancellation) and differential privacy, recovering the federated mean from masked vectors alone.
+The architecture blueprint is still evolving — see the [roadmap](./DESIGN.md#roadmap).
 
 ## Quick start
 
@@ -81,13 +83,12 @@ orchard/
 │   ├── OrchardNode/             # Node runtime, scheduler, Foundation Models adapter
 │   ├── OrchardSwarm/            # Peer discovery, coordinator election, layer-shard planner
 │   ├── OrchardRouter/           # Job fragmentation, redundant assignment, consensus aggregation
-│   └── orchard-demo/            # Node + swarm + router demo executable
+│   ├── OrchardCrypto/           # Secure Aggregation (SecAgg) + differential privacy
+│   └── orchard-demo/            # Node + swarm + router + secure-aggregation demo executable
 ├── Tests/                       # Swift Testing suites
 ├── docs/                        # GitHub Pages site
 └── .github/                     # CI + Pages workflows
 ```
-
-The `OrchardCrypto` package (SecAgg + differential privacy) lands in M4.
 
 ## License
 

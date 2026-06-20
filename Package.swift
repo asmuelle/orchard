@@ -16,6 +16,7 @@ let package = Package(
         .library(name: "OrchardNode", targets: ["OrchardNode"]),
         .library(name: "OrchardSwarm", targets: ["OrchardSwarm"]),
         .library(name: "OrchardRouter", targets: ["OrchardRouter"]),
+        .library(name: "OrchardCrypto", targets: ["OrchardCrypto"]),
         .executable(name: "orchard-demo", targets: ["orchard-demo"]),
     ],
     targets: [
@@ -32,9 +33,16 @@ let package = Package(
             name: "OrchardRouter",
             dependencies: ["OrchardProtocol"]
         ),
+        .target(name: "OrchardCrypto"),
         .executableTarget(
             name: "orchard-demo",
-            dependencies: ["OrchardNode", "OrchardSwarm", "OrchardRouter", "OrchardProtocol"]
+            dependencies: [
+                "OrchardNode",
+                "OrchardSwarm",
+                "OrchardRouter",
+                "OrchardCrypto",
+                "OrchardProtocol",
+            ]
         ),
         .testTarget(
             name: "OrchardProtocolTests",
@@ -51,6 +59,10 @@ let package = Package(
         .testTarget(
             name: "OrchardRouterTests",
             dependencies: ["OrchardRouter", "OrchardProtocol"]
+        ),
+        .testTarget(
+            name: "OrchardCryptoTests",
+            dependencies: ["OrchardCrypto"]
         ),
     ]
 )

@@ -136,7 +136,10 @@ See [`TOOLS.md`](./TOOLS.md) for the concrete frameworks behind each.
       load-balancing `AssignmentPlanner` (redundant, distinct nodes), a `NodeDispatcher`
       abstraction, a majority-vote `ConsensusEngine` (quorum + dissenter detection), and a
       `TaskRouter` actor that fans tasks out concurrently and merges results into per-task consensus.
-- [ ] **M4 — Privacy layer**: SecAgg + DP on a federated training round.
+- [x] **M4 — Privacy layer**: `OrchardCrypto` with Curve25519 pairwise key agreement, an
+      HMAC-SHA256 mask PRG, fixed-point quantization over a UInt32 field where pairwise masks
+      cancel exactly (real Bonawitz-style SecAgg), gradient clipping + the Gaussian DP mechanism,
+      and a `FederatedRound` that recovers the DP mean from masked vectors alone.
 - [ ] **M5 — Pilot**: one real scientific workload end-to-end.
 
 ## 10. Open questions
