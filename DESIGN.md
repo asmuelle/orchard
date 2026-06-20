@@ -128,7 +128,10 @@ See [`TOOLS.md`](./TOOLS.md) for the concrete frameworks behind each.
       Packages `OrchardProtocol` + `OrchardNode`, a `NodeRuntime` actor gating work behind the
       opportunistic scheduler, a Foundation Models adapter (real on-device inference on OS 26+)
       with a deterministic stub fallback, and the `orchard-demo` executable. Run `just demo`.
-- [ ] **M2 — Micro-swarm**: LAN discovery + two-device layer sharding via MLX.
+- [x] **M2 — Micro-swarm** (coordination layer): `OrchardSwarm` with `PeerDiscovery` (Bonjour
+      abstraction), `CoordinatorElection`, a memory-aware pipeline-parallel `ShardPlanner`, and a
+      `SwarmCoordinator` actor that picks solo-vs-swarm and emits a layer-shard plan. Real MLX
+      tensor execution over Network.framework plugs in behind a future `ShardExecutor`.
 - [ ] **M3 — Global tasks**: Task Router stub, redundant assignment, consensus merge.
 - [ ] **M4 — Privacy layer**: SecAgg + DP on a federated training round.
 - [ ] **M5 — Pilot**: one real scientific workload end-to-end.

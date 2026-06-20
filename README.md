@@ -36,10 +36,11 @@ See [`DESIGN.md`](./DESIGN.md) for the full architecture and [`docs/`](./docs) f
 
 ## Status
 
-🌱 **M1 — single-node runtime landed.** The `OrchardProtocol` + `OrchardNode` packages ship a
-`NodeRuntime` actor that gates work behind the opportunistic scheduler and runs structured-output
-inference via Apple's Foundation Models on OS 26+ (with a deterministic stub fallback elsewhere).
-The architecture blueprint is still evolving — see the [roadmap](./DESIGN.md#roadmap).
+🌱 **M1 + M2 landed.** `OrchardNode` ships a `NodeRuntime` actor that gates work behind the
+opportunistic scheduler and runs structured-output inference via Apple's Foundation Models on
+OS 26+ (deterministic stub fallback elsewhere). `OrchardSwarm` ships the micro-swarm coordination
+layer — peer discovery, coordinator election, and a memory-aware pipeline-parallel layer-shard
+planner. The architecture blueprint is still evolving — see the [roadmap](./DESIGN.md#roadmap).
 
 ## Quick start
 
@@ -74,15 +75,16 @@ orchard/
 ├── justfile                     # Task runner
 ├── Package.swift                # SwiftPM manifest
 ├── Sources/
-│   ├── OrchardProtocol/         # Wire types, task specs, structured-output schemas
+│   ├── OrchardProtocol/         # Wire types, task specs, schemas, node capabilities
 │   ├── OrchardNode/             # Node runtime, scheduler, Foundation Models adapter
-│   └── orchard-demo/            # Single-node demo executable
+│   ├── OrchardSwarm/            # Peer discovery, coordinator election, layer-shard planner
+│   └── orchard-demo/            # Single-node + micro-swarm demo executable
 ├── Tests/                       # Swift Testing suites
 ├── docs/                        # GitHub Pages site
 └── .github/                     # CI + Pages workflows
 ```
 
-Future packages (`OrchardSwarm`, `OrchardCrypto`, `OrchardRouter`) land in later milestones.
+Future packages (`OrchardCrypto`, `OrchardRouter`) land in later milestones.
 
 ## License
 
