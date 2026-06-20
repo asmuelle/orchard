@@ -48,13 +48,34 @@ CryptoKit primitives — see [security guidance](#7-security).
 
 | Package | Purpose | Notes |
 | --- | --- | --- |
-| `mlx-swift` | Tensor compute + sharded inference | Apple, Apache-2.0 |
+| `mlx-swift` | Tensor compute + sharded inference (`OrchardMLX`) | Apple, Apache-2.0; opt-in (see below) |
 | `swift-distributed-actors` | Optional: typed distributed actors for swarm RPC | Evaluate vs. raw Network.framework |
 | `swift-collections` | Deques/ordered sets in scheduler | Apple |
 | `swift-log` | Structured logging | Apple |
 | `swift-argument-parser` | CLI for `orchardctl` dev tool | Apple |
 
 > Prefer battle-tested, first-party (Apple) packages. Audit any non-Apple dependency before adoption.
+
+### MLX shard execution (opt-in)
+
+The Metal-accelerated `MLXShardExecutor` lives in the `OrchardMLX` target, which depends on
+`mlx-swift`. It is **gated behind the `ORCHARD_ENABLE_MLX` environment variable** in `Package.swift`:
+the dependency, target, and demo are only added when that variable is set. This keeps the default
+build (and CI) dependency-light and green, matching how every hardware-bound capability in Orchard
+sits behind a seam (`InferenceEngine`, `PeerDiscovery`, `ShardExecutor`).
+
+**Important — build with Xcode, not `swift build`:** mlx-swift uses no-JIT Metal kernels and needs a
+precompiled `default.metallib`. SwiftPM's command-line build does not compile `.metal` shaders, so a
+bare `swift run` fails to load the Metal library. The provided recipes use `xcodebuild`, which does
+compile the metallib:
+
+```bash
+just mlx-demo   # ORCHARD_ENABLE_MLX=1 xcodebuild … build, then runs the GPU sharded-pipeline demo
+just mlx-test   # runs OrchardMLXTests on Metal
+```
+
+Requires Apple Silicon + Xcode. The demo verifies the MLX executor matches the pure-Swift
+`LocalShardExecutor` to within ~5e-8.
 
 ## 5. Developer toolchain
 

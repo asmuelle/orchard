@@ -119,6 +119,7 @@ is the canonical reference for the system architecture, trust model, and roadmap
 | `OrchardRouter` | Task fragmentation, cohort selection, consensus aggregation (PCC-side) |
 | `OrchardProtocol` | Shared wire types, task specs, structured-output schemas |
 | `OrchardPilot` | Capstone integration: one scientific workload through every layer end-to-end |
+| `OrchardMLX` | Metal-accelerated `ShardExecutor` on mlx-swift (opt-in: `ORCHARD_ENABLE_MLX`) |
 
 See [`TOOLS.md`](./TOOLS.md) for the concrete frameworks behind each.
 
@@ -131,8 +132,13 @@ See [`TOOLS.md`](./TOOLS.md) for the concrete frameworks behind each.
       with a deterministic stub fallback, and the `orchard-demo` executable. Run `just demo`.
 - [x] **M2 — Micro-swarm** (coordination layer): `OrchardSwarm` with `PeerDiscovery` (Bonjour
       abstraction), `CoordinatorElection`, a memory-aware pipeline-parallel `ShardPlanner`, and a
-      `SwarmCoordinator` actor that picks solo-vs-swarm and emits a layer-shard plan. Real MLX
-      tensor execution over Network.framework plugs in behind a future `ShardExecutor`.
+      `SwarmCoordinator` actor that picks solo-vs-swarm and emits a layer-shard plan.
+- [x] **M2.1 — Shard execution**: the `ShardExecutor` seam is implemented. `LocalShardExecutor`
+      (pure Swift) and a `PipelineRunner` drive a `ShardPlan` to an actual distributed forward pass —
+      proven bit-identical to monolithic execution. `OrchardMLX` provides a **real Metal-accelerated
+      `MLXShardExecutor`** on `mlx-swift` (opt-in via `ORCHARD_ENABLE_MLX`; `just mlx-demo`),
+      verified to match the pure-Swift oracle to ~5e-8. Cross-device tensor transport over
+      Network.framework remains the next step.
 - [x] **M3 — Global tasks**: `OrchardRouter` with `TaskFragmenter` (Job → micro-tasks),
       load-balancing `AssignmentPlanner` (redundant, distinct nodes), a `NodeDispatcher`
       abstraction, a majority-vote `ConsensusEngine` (quorum + dissenter detection), and a

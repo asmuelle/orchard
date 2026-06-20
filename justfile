@@ -47,6 +47,17 @@ demo: build
 pilot: build
     .build/debug/orchard-pilot
 
+# Build & run the real MLX sharded-execution demo on Metal (Apple Silicon + Xcode).
+# Uses xcodebuild because SwiftPM's CLI does not compile MLX's Metal shader library (metallib);
+# only Xcode's build system does. ORCHARD_ENABLE_MLX gates the mlx-swift dependency in Package.swift.
+mlx-demo:
+    ORCHARD_ENABLE_MLX=1 xcodebuild -scheme orchard-mlx-demo -destination 'platform=macOS,arch=arm64' -derivedDataPath .xcbuild -configuration Debug build
+    .xcbuild/Build/Products/Debug/orchard-mlx-demo
+
+# Run the MLX executor tests on Metal (Apple Silicon + Xcode).
+mlx-test:
+    ORCHARD_ENABLE_MLX=1 xcodebuild test -scheme Orchard-Package -destination 'platform=macOS,arch=arm64' -derivedDataPath .xcbuild -only-testing:OrchardMLXTests
+
 # The full check CI runs
 ci: build test lint format-check
     @echo "✅ ci complete"

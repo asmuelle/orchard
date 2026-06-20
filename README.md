@@ -45,7 +45,10 @@ redundant load-balanced assignment, and majority-vote consensus that outvotes an
 nodes. `OrchardCrypto` is the privacy layer — Bonawitz-style Secure Aggregation (Curve25519 +
 exact pairwise mask cancellation) and differential privacy, recovering the federated mean from
 masked vectors alone. `OrchardPilot` ties them together end-to-end on a real scientific workload.
-See the [roadmap](./DESIGN.md#roadmap).
+The micro-swarm `ShardExecutor` seam is implemented too: a pure-Swift `PipelineRunner` runs a
+`ShardPlan` as a distributed forward pass (bit-identical to monolithic), and `OrchardMLX` provides
+a real Metal-accelerated executor on `mlx-swift` (opt-in; `just mlx-demo`). See the
+[roadmap](./DESIGN.md#roadmap).
 
 ## Quick start
 
@@ -100,8 +103,10 @@ orchard/
 │   ├── OrchardRouter/           # Job fragmentation, redundant assignment, consensus aggregation
 │   ├── OrchardCrypto/           # Secure Aggregation (SecAgg) + differential privacy
 │   ├── OrchardPilot/            # Capstone: one scientific workload through every layer
+│   ├── OrchardMLX/              # Metal-accelerated ShardExecutor on mlx-swift (opt-in)
 │   ├── orchard-demo/            # Node + swarm + router + secure-aggregation demo executable
-│   └── orchard-pilot/           # End-to-end folding-scan pilot executable
+│   ├── orchard-pilot/           # End-to-end folding-scan pilot executable
+│   └── orchard-mlx-demo/        # MLX sharded-execution demo (opt-in, Metal)
 ├── Tests/                       # Swift Testing suites
 ├── docs/                        # GitHub Pages site
 └── .github/                     # CI + Pages workflows
