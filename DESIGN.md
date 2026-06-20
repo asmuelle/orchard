@@ -118,6 +118,7 @@ is the canonical reference for the system architecture, trust model, and roadmap
 | `OrchardCrypto` | SecAgg masking, differential privacy, attestation |
 | `OrchardRouter` | Task fragmentation, cohort selection, consensus aggregation (PCC-side) |
 | `OrchardProtocol` | Shared wire types, task specs, structured-output schemas |
+| `OrchardPilot` | Capstone integration: one scientific workload through every layer end-to-end |
 
 See [`TOOLS.md`](./TOOLS.md) for the concrete frameworks behind each.
 
@@ -140,7 +141,9 @@ See [`TOOLS.md`](./TOOLS.md) for the concrete frameworks behind each.
       HMAC-SHA256 mask PRG, fixed-point quantization over a UInt32 field where pairwise masks
       cancel exactly (real Bonawitz-style SecAgg), gradient clipping + the Gaussian DP mechanism,
       and a `FederatedRound` that recovers the DP mean from masked vectors alone.
-- [ ] **M5 — Pilot**: one real scientific workload end-to-end.
+- [x] **M5 — Pilot**: `OrchardPilot` drives a folding-energy parameter scan through every layer —
+      Swarm placement → Router fragmentation/assignment → Node evaluation → consensus (rejecting a
+      faulty node) → a federated, DP-protected gradient-refinement step via Crypto. Run `just pilot`.
 
 ## 10. Open questions
 

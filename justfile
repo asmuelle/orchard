@@ -43,6 +43,10 @@ format-check:
 demo: build
     .build/debug/orchard-demo
 
+# Run the end-to-end pilot: distributed folding scan → consensus → federated refinement
+pilot: build
+    .build/debug/orchard-pilot
+
 # The full check CI runs
 ci: build test lint format-check
     @echo "✅ ci complete"

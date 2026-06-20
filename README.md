@@ -36,15 +36,16 @@ See [`DESIGN.md`](./DESIGN.md) for the full architecture and [`docs/`](./docs) f
 
 ## Status
 
-🌱 **M1–M4 landed.** `OrchardNode` ships a `NodeRuntime` actor that gates work behind the
-opportunistic scheduler and runs structured-output inference via Apple's Foundation Models on
-OS 26+ (deterministic stub fallback elsewhere). `OrchardSwarm` ships the micro-swarm coordination
-layer — peer discovery, coordinator election, and a memory-aware pipeline-parallel layer-shard
-planner. `OrchardRouter` ships the global layer — job fragmentation, redundant load-balanced
-assignment, and majority-vote consensus that outvotes and flags faulty nodes. `OrchardCrypto`
-ships the privacy layer — Bonawitz-style Secure Aggregation (Curve25519 + exact pairwise mask
-cancellation) and differential privacy, recovering the federated mean from masked vectors alone.
-The architecture blueprint is still evolving — see the [roadmap](./DESIGN.md#roadmap).
+🌳 **All five milestones (M1–M5) landed.** `OrchardNode` runs a `NodeRuntime` actor that gates
+work behind the opportunistic scheduler and does structured-output inference via Apple's
+Foundation Models on OS 26+ (deterministic stub fallback elsewhere). `OrchardSwarm` is the
+micro-swarm coordination layer — peer discovery, coordinator election, and a memory-aware
+pipeline-parallel layer-shard planner. `OrchardRouter` is the global layer — job fragmentation,
+redundant load-balanced assignment, and majority-vote consensus that outvotes and flags faulty
+nodes. `OrchardCrypto` is the privacy layer — Bonawitz-style Secure Aggregation (Curve25519 +
+exact pairwise mask cancellation) and differential privacy, recovering the federated mean from
+masked vectors alone. `OrchardPilot` ties them together end-to-end on a real scientific workload.
+See the [roadmap](./DESIGN.md#roadmap).
 
 ## Quick start
 
@@ -53,7 +54,21 @@ just setup     # install toolchain + resolve packages
 just build     # build all targets
 just test      # run the test suite
 just demo      # run one task through a node (Foundation Models on OS 26+, else stub)
+just pilot     # run the full pipeline: distributed scan → consensus → federated refinement
 just site      # preview the GitHub Pages site locally
+```
+
+`just pilot` drives a scientific workload through all five layers at once:
+
+```
+🌳 Orchard pilot — distributed folding scan
+  scorer placement:  solo (scorer fits on one device)
+  candidates:        12 evaluated across 4 nodes
+  consensus:         12/12 (dissents rejected: 9)
+  best conformation: [0.486, 0.336, 0.543]  energy 0.4708
+  refined (federated DP gradient step):
+                     [0.487, 0.208, 0.593]  energy 0.3009
+  → energy reduced by 0.1699 toward the native state [0.500, -0.300, 0.800]
 ```
 
 `just demo` on an OS 26+ machine produces a real on-device structured summary:
@@ -84,7 +99,9 @@ orchard/
 │   ├── OrchardSwarm/            # Peer discovery, coordinator election, layer-shard planner
 │   ├── OrchardRouter/           # Job fragmentation, redundant assignment, consensus aggregation
 │   ├── OrchardCrypto/           # Secure Aggregation (SecAgg) + differential privacy
-│   └── orchard-demo/            # Node + swarm + router + secure-aggregation demo executable
+│   ├── OrchardPilot/            # Capstone: one scientific workload through every layer
+│   ├── orchard-demo/            # Node + swarm + router + secure-aggregation demo executable
+│   └── orchard-pilot/           # End-to-end folding-scan pilot executable
 ├── Tests/                       # Swift Testing suites
 ├── docs/                        # GitHub Pages site
 └── .github/                     # CI + Pages workflows
