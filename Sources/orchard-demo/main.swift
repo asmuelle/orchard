@@ -1,6 +1,7 @@
 import Foundation
 import OrchardNode
 import OrchardProtocol
+import OrchardRouter
 import OrchardSwarm
 
 // Runs a single web-indexing task through a node runtime end to end. Uses the on-device
@@ -100,4 +101,67 @@ case let .swarm(coordinatorID, plan):
     }
 case let .insufficient(required, available):
     print("Insufficient memory: needs \(required)MB, swarm offers \(available)MB.")
+}
+
+// --- Global task-router demo: redundant assignment + consensus over a faulty node ---
+print("\n🌳 Orchard task-router demo")
+
+let routerNodes = [NodeID("node-a"), NodeID("node-b"), NodeID("node-c")]
+let indexJob = Job(
+    id: "web-index",
+    kind: .index,
+    schema: StructuredSchema.required([("topic", .string)]),
+    units: (1 ... 3).map { WorkUnit(id: "page\($0)", prompt: "Summarize public page \($0)") },
+    redundancy: 3
+)
+
+let router = TaskRouter(dispatcher: DemoDispatcher(faulty: [NodeID("node-c")]))
+let jobOutcome = try await router.run(job: indexJob, nodes: routerNodes)
+
+print("Job \(jobOutcome.jobID): \(jobOutcome.agreedCount)/\(jobOutcome.results.count) tasks reached consensus")
+for report in jobOutcome.results {
+    switch report.outcome {
+    case let .agreed(_, support, total):
+        let dissent = report.dissenters.isEmpty
+            ? ""
+            : " — rejected \(report.dissenters.map(\.value).joined(separator: ", "))"
+        print("  \(report.taskID): agreed \(support)/\(total)\(dissent)")
+    case let .noQuorum(total):
+        print("  \(report.taskID): no quorum (\(total) results)")
+    case .noResults:
+        print("  \(report.taskID): no results")
+    }
+}
+
+// MARK: - Demo dispatcher
+
+/// Runs each task through a real NodeRuntime + stub engine; one node is wired to diverge so the
+/// router's consensus visibly outvotes and flags it.
+struct DemoDispatcher: NodeDispatcher {
+    let faulty: Set<NodeID>
+
+    func dispatch(_ task: TaskSpec, to node: NodeID) async -> TaskResult {
+        let engine: InferenceEngine = faulty.contains(node)
+            ? DivergentStubEngine()
+            : StubInferenceEngine()
+        let runtime = NodeRuntime(
+            nodeID: node,
+            engine: engine,
+            conditions: StaticConditionsProvider(.ready)
+        )
+        return await runtime.process(task)
+    }
+}
+
+/// A stub that returns schema-valid but deliberately different output.
+struct DivergentStubEngine: InferenceEngine {
+    let identifier = "divergent-stub"
+
+    func run(_ request: InferenceRequest) async throws -> InferenceResponse {
+        var payload: [String: JSONValue] = [:]
+        for field in request.schema.fields where field.type == .string {
+            payload[field.name] = .string("divergent:\(field.name)")
+        }
+        return InferenceResponse(payload: payload, rawText: "divergent")
+    }
 }

@@ -132,7 +132,10 @@ See [`TOOLS.md`](./TOOLS.md) for the concrete frameworks behind each.
       abstraction), `CoordinatorElection`, a memory-aware pipeline-parallel `ShardPlanner`, and a
       `SwarmCoordinator` actor that picks solo-vs-swarm and emits a layer-shard plan. Real MLX
       tensor execution over Network.framework plugs in behind a future `ShardExecutor`.
-- [ ] **M3 — Global tasks**: Task Router stub, redundant assignment, consensus merge.
+- [x] **M3 — Global tasks**: `OrchardRouter` with `TaskFragmenter` (Job → micro-tasks),
+      load-balancing `AssignmentPlanner` (redundant, distinct nodes), a `NodeDispatcher`
+      abstraction, a majority-vote `ConsensusEngine` (quorum + dissenter detection), and a
+      `TaskRouter` actor that fans tasks out concurrently and merges results into per-task consensus.
 - [ ] **M4 — Privacy layer**: SecAgg + DP on a federated training round.
 - [ ] **M5 — Pilot**: one real scientific workload end-to-end.
 

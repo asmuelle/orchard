@@ -36,11 +36,13 @@ See [`DESIGN.md`](./DESIGN.md) for the full architecture and [`docs/`](./docs) f
 
 ## Status
 
-🌱 **M1 + M2 landed.** `OrchardNode` ships a `NodeRuntime` actor that gates work behind the
+🌱 **M1–M3 landed.** `OrchardNode` ships a `NodeRuntime` actor that gates work behind the
 opportunistic scheduler and runs structured-output inference via Apple's Foundation Models on
 OS 26+ (deterministic stub fallback elsewhere). `OrchardSwarm` ships the micro-swarm coordination
 layer — peer discovery, coordinator election, and a memory-aware pipeline-parallel layer-shard
-planner. The architecture blueprint is still evolving — see the [roadmap](./DESIGN.md#roadmap).
+planner. `OrchardRouter` ships the global layer — job fragmentation, redundant load-balanced
+assignment, and majority-vote consensus that outvotes and flags faulty nodes. The architecture
+blueprint is still evolving — see the [roadmap](./DESIGN.md#roadmap).
 
 ## Quick start
 
@@ -78,13 +80,14 @@ orchard/
 │   ├── OrchardProtocol/         # Wire types, task specs, schemas, node capabilities
 │   ├── OrchardNode/             # Node runtime, scheduler, Foundation Models adapter
 │   ├── OrchardSwarm/            # Peer discovery, coordinator election, layer-shard planner
-│   └── orchard-demo/            # Single-node + micro-swarm demo executable
+│   ├── OrchardRouter/           # Job fragmentation, redundant assignment, consensus aggregation
+│   └── orchard-demo/            # Node + swarm + router demo executable
 ├── Tests/                       # Swift Testing suites
 ├── docs/                        # GitHub Pages site
 └── .github/                     # CI + Pages workflows
 ```
 
-Future packages (`OrchardCrypto`, `OrchardRouter`) land in later milestones.
+The `OrchardCrypto` package (SecAgg + differential privacy) lands in M4.
 
 ## License
 
