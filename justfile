@@ -19,13 +19,13 @@ setup:
     @swift package resolve 2>/dev/null || echo "ℹ️  no Package.swift yet — skeleton stage"
     @echo "✅ setup checks complete"
 
-# Build all targets
+# Build all targets (no-op until Package.swift exists — skeleton stage)
 build:
-    swift build
+    @if [ -f Package.swift ]; then swift build; else echo "ℹ️  no Package.swift yet — skeleton stage, nothing to build"; fi
 
-# Run the test suite
+# Run the test suite (no-op until Package.swift exists — skeleton stage)
 test:
-    swift test
+    @if [ -f Package.swift ]; then swift test; else echo "ℹ️  no Package.swift yet — skeleton stage, no tests"; fi
 
 # Lint with swiftlint (no-op if not installed)
 lint:
