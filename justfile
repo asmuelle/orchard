@@ -58,6 +58,11 @@ mlx-demo:
 mlx-test:
     ORCHARD_ENABLE_MLX=1 xcodebuild test -scheme Orchard-Package -destination 'platform=macOS,arch=arm64' -derivedDataPath .xcbuild -only-testing:OrchardMLXTests
 
+# Run the live Bonjour discovery test over real mDNS (advertise → discover → connect → execute).
+# Gated off in the default suite because multicast in CI sandboxes is unreliable.
+bonjour-test:
+    ORCHARD_LIVE_BONJOUR=1 swift test --filter OrchardTransportTests.BonjourTests
+
 # The full check CI runs
 ci: build test lint format-check
     @echo "✅ ci complete"

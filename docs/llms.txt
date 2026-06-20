@@ -1,0 +1,27 @@
+# Orchard
+
+> A decentralized, privacy-preserving swarm-intelligence network powered entirely by idle iPhones, iPads, and Macs.
+
+## What it is
+
+Orchard coordinates the idle Neural Engines and on-device Foundation Models of millions of iPhones, iPads, and Macs into a cooperative swarm — solving massive problems while 100% of raw user data stays on the device. It is decentralized, private, and Apple-native. Marginal compute cost is $0, raw data never leaves the device, and work runs only when a device is plugged in, on Wi-Fi, and idle.
+
+## How it works
+
+- **Local node execution.** Every device is a node, running native on-device inference via the Foundation Models framework on the Neural Engine. No token fees. Activates only when charging, on Wi-Fi, and idle — typically overnight.
+- **Local micro-swarms.** An iPhone, iPad, and Mac on one LAN shard a high-parameter model across their unified memories — MLX-style peer-to-peer clustering runs models no single device could hold.
+- **Global agentic workflows.** A Task Router fragments a massive problem into thousands of micro-prompts. Edge agents return structured output; millions of results merge into one accurate map.
+- **Cryptographic privacy.** Federated learning with Secure Aggregation and Differential Privacy. Only mathematically masked gradient updates ever leave a device — individual data is impractical to reconstruct.
+
+## Key features
+
+- Decentralized swarm built from idle Apple silicon, with $0 marginal compute cost.
+- Raw user data never leaves the device; only masked aggregates cross the network.
+- Asynchronous, batch-processed work — never real-time conversational swarm inference, because consumer Wi-Fi is no NVLink.
+- Heavy work chunked into resumable units that respect iOS thermal and battery policy.
+- Untrusted nodes guarded by redundant assignment and consensus voting before any result counts.
+- Example uses: decentralized science (molecular folding, climate simulation), a commons knowledge graph, and collaborative creativity (distributed AI video and diffusion rendering).
+
+## Link
+
+- Project & blueprint (GitHub): https://github.com/asmuelle/orchard

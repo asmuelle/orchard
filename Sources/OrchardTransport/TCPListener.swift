@@ -6,18 +6,35 @@
     // to `onConnection` as a TCPChannel. `@unchecked Sendable`: NWListener isn't Sendable, but it's
     // confined to its dispatch queue and `self` is the only non-Sendable thing captured by handlers.
 
+    struct BonjourAdvertisement {
+        let name: String
+        let txtRecord: NWTXTRecord
+    }
+
     final class TCPListener: @unchecked Sendable {
         private let listener: NWListener
+        private let advertisement: BonjourAdvertisement?
         private let queue = DispatchQueue(label: "orchard.transport.listener")
         private let onConnection: @Sendable (TCPChannel) -> Void
 
-        init(onConnection: @escaping @Sendable (TCPChannel) -> Void) throws {
+        init(
+            advertise: BonjourAdvertisement? = nil,
+            onConnection: @escaping @Sendable (TCPChannel) -> Void
+        ) throws {
             listener = try NWListener(using: .tcp)
+            advertisement = advertise
             self.onConnection = onConnection
         }
 
         /// Starts listening and returns the bound port once ready.
         func start() async throws -> UInt16 {
+            if let advertisement {
+                listener.service = NWListener.Service(
+                    name: advertisement.name,
+                    type: orchardServiceType,
+                    txtRecord: advertisement.txtRecord
+                )
+            }
             listener.newConnectionHandler = { [onConnection] connection in
                 onConnection(TCPChannel(connection: connection))
             }

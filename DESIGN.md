@@ -120,7 +120,7 @@ is the canonical reference for the system architecture, trust model, and roadmap
 | `OrchardProtocol` | Shared wire types, task specs, structured-output schemas |
 | `OrchardPilot` | Capstone integration: one scientific workload through every layer end-to-end |
 | `OrchardMLX` | Metal-accelerated `ShardExecutor` on mlx-swift (opt-in: `ORCHARD_ENABLE_MLX`) |
-| `OrchardTransport` | Cross-device activation transport over Network.framework TCP (`ShardService` + `RemoteShardExecutor`) |
+| `OrchardTransport` | Cross-device activation transport over Network.framework TCP + Bonjour discovery (`ShardService`, `RemoteShardExecutor`, `BonjourBrowser`) |
 
 See [`TOOLS.md`](./TOOLS.md) for the concrete frameworks behind each.
 
@@ -143,8 +143,14 @@ See [`TOOLS.md`](./TOOLS.md) for the concrete frameworks behind each.
       pipeline stages over Network.framework TCP. `ShardService` (NWListener) runs a device's shard;
       `RemoteShardExecutor` conforms to `ShardExecutor`, so `PipelineRunner` drives a real
       multi-device pipeline unchanged. Verified over localhost TCP: a 2-stage distributed pipeline
-      matches monolithic execution bit-for-bit. Next: Bonjour auto-discovery + a compact binary
-      tensor encoding (currently length-prefixed JSON frames).
+      matches monolithic execution bit-for-bit.
+- [x] **M2.3 — Bonjour auto-discovery**: `ShardService` advertises an `_orchard._tcp` service (with
+      capabilities in a TXT record); `BonjourBrowser` (NWBrowser) discovers live peers behind the
+      `PeerBrowser` seam, and `RemoteShardExecutor(peer:)` connects straight to a discovered endpoint.
+      Verified live (advertise → discover → connect → execute; `just bonjour-test`). Note: TXT
+      delivery via NWBrowser is environment-dependent, so capability advertisement is best-effort —
+      a capabilities handshake over the TCP channel is the robust follow-up. Remaining: a compact
+      binary tensor encoding (currently length-prefixed JSON frames).
 - [x] **M3 — Global tasks**: `OrchardRouter` with `TaskFragmenter` (Job → micro-tasks),
       load-balancing `AssignmentPlanner` (redundant, distinct nodes), a `NodeDispatcher`
       abstraction, a majority-vote `ConsensusEngine` (quorum + dissenter detection), and a

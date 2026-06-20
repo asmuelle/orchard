@@ -1,0 +1,51 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Orchard — a decentralized swarm-intelligence network powered by idle Apple devices">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d2018"/>
+      <stop offset="1" stop-color="#08160f"/>
+    </linearGradient>
+    <radialGradient id="glowGreen" cx="0.08" cy="0.05" r="0.7">
+      <stop offset="0" stop-color="#2f9e6a" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#2f9e6a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowAmber" cx="0.98" cy="-0.05" r="0.6">
+      <stop offset="0" stop-color="#e0a64e" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#e0a64e" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glowGreen)"/>
+  <rect width="1200" height="630" fill="url(#glowAmber)"/>
+
+  <!-- swarm motif: nodes linked into a canopy -->
+  <g stroke="#3fb37f" stroke-opacity="0.20" stroke-width="2" fill="none">
+    <path d="M980 150 L1060 230 M1060 230 L1010 330 M1010 330 L1100 400 M980 150 L1090 130 M1060 230 L1140 280 M1010 330 L930 280 M930 280 L980 150"/>
+  </g>
+  <g fill="#5fd49a" fill-opacity="0.85">
+    <circle cx="980" cy="150" r="7"/>
+    <circle cx="1060" cy="230" r="6"/>
+    <circle cx="1010" cy="330" r="7"/>
+    <circle cx="1100" cy="400" r="6"/>
+    <circle cx="1090" cy="130" r="5"/>
+    <circle cx="1140" cy="280" r="5"/>
+    <circle cx="930" cy="280" r="6"/>
+  </g>
+
+  <!-- wordmark -->
+  <text x="96" y="150" font-family="Fraunces, Georgia, 'Times New Roman', serif" font-weight="900" font-size="56" letter-spacing="-1.5" fill="#f4f6f0">
+    <tspan font-size="56">🌳</tspan><tspan dx="14" fill="#f4f6f0">Orchard</tspan>
+  </text>
+
+  <!-- headline -->
+  <text x="96" y="320" font-family="Fraunces, Georgia, 'Times New Roman', serif" font-weight="900" font-size="86" letter-spacing="-3" fill="#f4f6f0">A supercomputer that</text>
+  <text x="96" y="418" font-family="Fraunces, Georgia, 'Times New Roman', serif" font-style="italic" font-weight="400" font-size="86" letter-spacing="-2" fill="#5fd49a">grows in the dark.</text>
+
+  <!-- description -->
+  <text x="96" y="500" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-weight="400" font-size="30" fill="#b9cabf">A decentralized, privacy-preserving swarm-intelligence network</text>
+  <text x="96" y="542" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-weight="400" font-size="30" fill="#b9cabf">powered entirely by idle iPhones, iPads, and Macs.</text>
+
+  <!-- footer rule + meta -->
+  <rect x="96" y="578" width="1008" height="2" fill="#274234"/>
+  <text x="96" y="612" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-weight="600" font-size="20" letter-spacing="3" fill="#d9a24e">DECENTRALIZED · PRIVATE · APPLE-NATIVE</text>
+</svg>

@@ -14,11 +14,10 @@
             self.connection = connection
         }
 
-        convenience init(host: String, port: UInt16) throws {
-            guard let nwPort = NWEndpoint.Port(rawValue: port) else {
-                throw TransportError.invalidEndpoint(host: host, port: port)
-            }
-            self.init(connection: NWConnection(host: NWEndpoint.Host(host), port: nwPort, using: .tcp))
+        /// Connects to any endpoint — a host:port, or a Bonjour `.service(...)` endpoint discovered
+        /// by `BonjourBrowser` (Network.framework resolves the service to an address).
+        convenience init(endpoint: NWEndpoint) {
+            self.init(connection: NWConnection(to: endpoint, using: .tcp))
         }
 
         func start() async throws {

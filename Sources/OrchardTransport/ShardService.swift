@@ -1,5 +1,6 @@
 #if canImport(Network)
     import Foundation
+    import OrchardProtocol
     import OrchardSwarm
 
     // The device-side service: listens for activation requests, runs the requested layer range through
@@ -9,17 +10,28 @@
     public actor ShardService {
         private let executor: any ShardExecutor
         private let model: ShardableModel
+        private let advertise: NodeCapabilities?
         private var listener: TCPListener?
         public private(set) var port: UInt16 = 0
 
-        public init(executor: any ShardExecutor, model: ShardableModel) {
+        /// `advertiseAs` opts the service into Bonjour discovery, publishing the given capabilities
+        /// in the service's TXT record. Omit it for a plain host:port service.
+        public init(
+            executor: any ShardExecutor,
+            model: ShardableModel,
+            advertiseAs capabilities: NodeCapabilities? = nil
+        ) {
             self.executor = executor
             self.model = model
+            advertise = capabilities
         }
 
         /// Starts listening on an OS-assigned port and returns it.
         public func start() async throws -> UInt16 {
-            let listener = try TCPListener { channel in
+            let advertisement = advertise.map {
+                BonjourAdvertisement(name: $0.nodeID.value, txtRecord: CapabilityTXT.encode($0))
+            }
+            let listener = try TCPListener(advertise: advertisement) { channel in
                 Task { await self.serve(channel) }
             }
             self.listener = listener
