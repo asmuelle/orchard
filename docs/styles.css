@@ -1,0 +1,300 @@
+/* Orchard — landing page styles.
+   Editorial / botanical direction: warm paper light theme, deep canopy dark theme,
+   Fraunces display + Inter text, intentional rhythm, compositor-friendly motion. */
+
+:root {
+  /* Light "orchard at dawn" */
+  --bg: oklch(97% 0.012 95);
+  --bg-elevated: oklch(99% 0.008 95);
+  --ink: oklch(24% 0.03 150);
+  --ink-soft: oklch(44% 0.025 150);
+  --accent: oklch(58% 0.15 150);          /* canopy green */
+  --accent-2: oklch(72% 0.16 60);         /* ripe amber */
+  --line: oklch(88% 0.02 95);
+  --surface: oklch(99% 0.01 95);
+
+  --text-base: clamp(1rem, 0.95rem + 0.35vw, 1.18rem);
+  --text-hero: clamp(2.7rem, 1rem + 8vw, 7rem);
+  --text-h2: clamp(1.8rem, 1.1rem + 2.6vw, 3.2rem);
+  --space-section: clamp(4rem, 3rem + 6vw, 9rem);
+  --maxw: 72rem;
+
+  --radius: 18px;
+  --duration: 320ms;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --shadow: 0 1px 2px oklch(24% 0.03 150 / 0.06), 0 12px 40px oklch(24% 0.03 150 / 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: oklch(20% 0.025 155);
+    --bg-elevated: oklch(24% 0.03 155);
+    --ink: oklch(95% 0.015 95);
+    --ink-soft: oklch(78% 0.02 95);
+    --accent: oklch(74% 0.15 150);
+    --accent-2: oklch(80% 0.15 65);
+    --line: oklch(32% 0.03 155);
+    --surface: oklch(25% 0.03 155);
+    --shadow: 0 1px 2px oklch(0% 0 0 / 0.4), 0 16px 50px oklch(0% 0 0 / 0.45);
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(120% 80% at 100% -10%, oklch(72% 0.16 60 / 0.10), transparent 60%),
+    radial-gradient(100% 70% at -10% 0%, oklch(58% 0.15 150 / 0.12), transparent 55%),
+    var(--bg);
+  color: var(--ink);
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  font-size: var(--text-base);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+}
+.skip-link:focus {
+  left: 1rem; top: 1rem;
+  z-index: 10;
+  background: var(--accent);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+}
+
+/* ---------- header ---------- */
+.site-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 1.4rem clamp(1.2rem, 4vw, 2.5rem);
+}
+.wordmark {
+  font-family: "Fraunces", serif;
+  font-weight: 900;
+  font-size: 1.4rem;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-decoration: none;
+}
+.wordmark .leaf { font-size: 1.15em; }
+.site-head nav {
+  display: flex;
+  gap: clamp(0.6rem, 2vw, 1.6rem);
+  align-items: center;
+}
+.site-head nav a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color var(--duration) var(--ease-out-expo);
+}
+.site-head nav a:hover { color: var(--accent); }
+.site-head nav a.ghost {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.4rem 1rem;
+  color: var(--ink);
+}
+.site-head nav a.ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ---------- hero ---------- */
+main { display: block; }
+.hero {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 6rem) clamp(1.2rem, 4vw, 2.5rem) var(--space-section);
+}
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin: 0 0 1.2rem;
+}
+.hero h1 {
+  font-family: "Fraunces", serif;
+  font-weight: 900;
+  font-size: var(--text-hero);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  margin: 0 0 1.5rem;
+  max-width: 16ch;
+}
+.hero h1 em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+}
+.lede {
+  font-size: clamp(1.1rem, 0.95rem + 0.7vw, 1.5rem);
+  color: var(--ink-soft);
+  max-width: 46ch;
+  margin: 0 0 2.2rem;
+}
+.lede strong { color: var(--ink); font-weight: 600; }
+
+.cta-row { display: flex; flex-wrap: wrap; gap: 0.9rem; margin-bottom: 3.5rem; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform var(--duration) var(--ease-out-expo),
+              box-shadow var(--duration) var(--ease-out-expo),
+              border-color var(--duration) var(--ease-out-expo);
+}
+.btn:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.btn.primary {
+  background: var(--accent);
+  border-color: transparent;
+  color: oklch(99% 0.01 150);
+}
+
+.stat-band {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 1px;
+  margin: 0;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.stat-band > div { background: var(--bg-elevated); padding: 1.4rem 1.6rem; }
+.stat-band dt { font-size: 0.82rem; color: var(--ink-soft); letter-spacing: 0.02em; }
+.stat-band dd {
+  margin: 0.25rem 0 0;
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: var(--accent);
+}
+
+/* ---------- pillars (bento) ---------- */
+.pillars, .uses, .reality {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: var(--space-section) clamp(1.2rem, 4vw, 2.5rem);
+}
+h2 {
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: var(--text-h2);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin: 0 0 2.5rem;
+}
+.pillar-grid {
+  list-style: none;
+  margin: 0; padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.2rem;
+}
+.pillar {
+  position: relative;
+  background: var(--bg-elevated);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.8rem;
+  overflow: hidden;
+  transition: transform var(--duration) var(--ease-out-expo),
+              box-shadow var(--duration) var(--ease-out-expo);
+}
+.pillar:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.pillar.feature {
+  grid-row: span 2;
+  background:
+    linear-gradient(160deg, oklch(58% 0.15 150 / 0.10), transparent 55%),
+    var(--bg-elevated);
+}
+.pillar.wide { grid-column: 1 / -1; }
+.pillar .idx {
+  font-family: "Fraunces", serif;
+  font-weight: 900;
+  font-size: 0.95rem;
+  color: var(--accent-2);
+  letter-spacing: 0.05em;
+}
+.pillar h3 {
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: 1.35rem;
+  margin: 0.5rem 0 0.7rem;
+  letter-spacing: -0.01em;
+}
+.pillar p { margin: 0; color: var(--ink-soft); }
+
+/* ---------- uses ---------- */
+.use-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1.2rem;
+}
+.use {
+  border-top: 3px solid var(--accent);
+  padding: 1.4rem 0.2rem 0;
+}
+.use h3 {
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem;
+}
+.use p { margin: 0; color: var(--ink-soft); }
+
+/* ---------- reality ---------- */
+.reality {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  margin-bottom: var(--space-section);
+}
+.reality-list { margin: 0; padding-left: 1.2rem; display: grid; gap: 1rem; }
+.reality-list li { color: var(--ink-soft); }
+.reality-list strong { color: var(--ink); }
+
+/* ---------- footer ---------- */
+.site-foot {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 3rem clamp(1.2rem, 4vw, 2.5rem) 4rem;
+  border-top: 1px solid var(--line);
+  color: var(--ink-soft);
+}
+.site-foot p { margin: 0.2rem 0; }
+.site-foot .fine { font-size: 0.85rem; opacity: 0.8; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 640px) {
+  .pillar-grid { grid-template-columns: 1fr; }
+  .pillar.feature { grid-row: auto; }
+  .site-head nav a:not(.ghost) { display: none; }
+}
+
+/* ---------- motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
