@@ -47,8 +47,10 @@ exact pairwise mask cancellation) and differential privacy, recovering the feder
 masked vectors alone. `OrchardPilot` ties them together end-to-end on a real scientific workload.
 The micro-swarm `ShardExecutor` seam is implemented too: a pure-Swift `PipelineRunner` runs a
 `ShardPlan` as a distributed forward pass (bit-identical to monolithic), and `OrchardMLX` provides
-a real Metal-accelerated executor on `mlx-swift` (opt-in; `just mlx-demo`). See the
-[roadmap](./DESIGN.md#roadmap).
+a real Metal-accelerated executor on `mlx-swift` (opt-in; `just mlx-demo`). `OrchardTransport`
+ships activations between pipeline stages over real Network.framework TCP, so `PipelineRunner`
+drives a genuine multi-device pipeline (verified over localhost: distributed == monolithic). See
+the [roadmap](./DESIGN.md#roadmap).
 
 ## Quick start
 
@@ -104,7 +106,8 @@ orchard/
 │   ├── OrchardCrypto/           # Secure Aggregation (SecAgg) + differential privacy
 │   ├── OrchardPilot/            # Capstone: one scientific workload through every layer
 │   ├── OrchardMLX/              # Metal-accelerated ShardExecutor on mlx-swift (opt-in)
-│   ├── orchard-demo/            # Node + swarm + router + secure-aggregation demo executable
+│   ├── OrchardTransport/        # Cross-device activation transport over Network.framework TCP
+│   ├── orchard-demo/            # Node + swarm + router + crypto + transport demo executable
 │   ├── orchard-pilot/           # End-to-end folding-scan pilot executable
 │   └── orchard-mlx-demo/        # MLX sharded-execution demo (opt-in, Metal)
 ├── Tests/                       # Swift Testing suites

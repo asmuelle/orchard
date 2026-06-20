@@ -120,6 +120,7 @@ is the canonical reference for the system architecture, trust model, and roadmap
 | `OrchardProtocol` | Shared wire types, task specs, structured-output schemas |
 | `OrchardPilot` | Capstone integration: one scientific workload through every layer end-to-end |
 | `OrchardMLX` | Metal-accelerated `ShardExecutor` on mlx-swift (opt-in: `ORCHARD_ENABLE_MLX`) |
+| `OrchardTransport` | Cross-device activation transport over Network.framework TCP (`ShardService` + `RemoteShardExecutor`) |
 
 See [`TOOLS.md`](./TOOLS.md) for the concrete frameworks behind each.
 
@@ -137,8 +138,13 @@ See [`TOOLS.md`](./TOOLS.md) for the concrete frameworks behind each.
       (pure Swift) and a `PipelineRunner` drive a `ShardPlan` to an actual distributed forward pass —
       proven bit-identical to monolithic execution. `OrchardMLX` provides a **real Metal-accelerated
       `MLXShardExecutor`** on `mlx-swift` (opt-in via `ORCHARD_ENABLE_MLX`; `just mlx-demo`),
-      verified to match the pure-Swift oracle to ~5e-8. Cross-device tensor transport over
-      Network.framework remains the next step.
+      verified to match the pure-Swift oracle to ~5e-8.
+- [x] **M2.2 — Cross-device transport**: `OrchardTransport` ships activations (not weights) between
+      pipeline stages over Network.framework TCP. `ShardService` (NWListener) runs a device's shard;
+      `RemoteShardExecutor` conforms to `ShardExecutor`, so `PipelineRunner` drives a real
+      multi-device pipeline unchanged. Verified over localhost TCP: a 2-stage distributed pipeline
+      matches monolithic execution bit-for-bit. Next: Bonjour auto-discovery + a compact binary
+      tensor encoding (currently length-prefixed JSON frames).
 - [x] **M3 — Global tasks**: `OrchardRouter` with `TaskFragmenter` (Job → micro-tasks),
       load-balancing `AssignmentPlanner` (redundant, distinct nodes), a `NodeDispatcher`
       abstraction, a majority-vote `ConsensusEngine` (quorum + dissenter detection), and a

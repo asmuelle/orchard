@@ -4,6 +4,7 @@ import OrchardNode
 import OrchardProtocol
 import OrchardRouter
 import OrchardSwarm
+import OrchardTransport
 
 // Runs a single web-indexing task through a node runtime end to end. Uses the on-device
 // Foundation Models engine when the platform provides it (OS 26+), otherwise the deterministic
@@ -165,6 +166,42 @@ do {
     print("  → reconstructed from masked vectors only, with SecAgg + differential privacy")
 } catch {
     print("  secure aggregation failed: \(error)")
+}
+
+// --- Cross-device transport demo: shard a model across two TCP services, activations on the wire ---
+print("\n🌳 Orchard cross-device transport demo")
+
+let transportModel = ShardableModel.deterministic(dimension: 16, layerCount: 8, seed: 99)
+let transportInput = [Float](repeating: 0.1, count: 16)
+
+let stageA = ShardService(executor: LocalShardExecutor(), model: transportModel)
+let stageB = ShardService(executor: LocalShardExecutor(), model: transportModel)
+do {
+    let portA = try await stageA.start()
+    let portB = try await stageB.start()
+    print("  stage A listening on 127.0.0.1:\(portA), stage B on 127.0.0.1:\(portB)")
+
+    let transportPlan = ShardPlan(modelName: transportModel.layerCount.description, stages: [
+        LayerShard(owner: NodeID("a"), layerRange: 0 ..< 5),
+        LayerShard(owner: NodeID("b"), layerRange: 5 ..< 8),
+    ])
+    let remoteExecutors: [NodeID: any ShardExecutor] = [
+        NodeID("a"): RemoteShardExecutor(endpoint: NodeEndpoint(port: portA)),
+        NodeID("b"): RemoteShardExecutor(endpoint: NodeEndpoint(port: portB)),
+    ]
+    let distributed = try await PipelineRunner().run(
+        plan: transportPlan, model: transportModel, input: transportInput, executors: remoteExecutors
+    )
+    let monolithic = try await LocalShardExecutor().execute(
+        layerRange: 0 ..< transportModel.layerCount, of: transportModel, input: transportInput
+    )
+    let drift = zip(distributed, monolithic).map { abs($0 - $1) }.max() ?? 0
+    print("  ran 8 layers across 2 services; activations crossed TCP between stages")
+    print("  distributed vs monolithic max |Δ| = \(String(format: "%.2e", drift))  → \(drift < 1e-4 ? "MATCH ✅" : "MISMATCH ❌")")
+    await stageA.stop()
+    await stageB.stop()
+} catch {
+    print("  transport demo failed: \(error)")
 }
 
 // MARK: - Demo dispatcher

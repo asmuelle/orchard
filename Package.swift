@@ -19,6 +19,7 @@ var products: [Product] = [
     .library(name: "OrchardSwarm", targets: ["OrchardSwarm"]),
     .library(name: "OrchardRouter", targets: ["OrchardRouter"]),
     .library(name: "OrchardCrypto", targets: ["OrchardCrypto"]),
+    .library(name: "OrchardTransport", targets: ["OrchardTransport"]),
     .library(name: "OrchardPilot", targets: ["OrchardPilot"]),
     .executable(name: "orchard-demo", targets: ["orchard-demo"]),
     .executable(name: "orchard-pilot", targets: ["orchard-pilot"]),
@@ -47,6 +48,10 @@ var targets: [Target] = [
     ),
     .target(name: "OrchardCrypto"),
     .target(
+        name: "OrchardTransport",
+        dependencies: ["OrchardProtocol", "OrchardSwarm"]
+    ),
+    .target(
         name: "OrchardPilot",
         dependencies: [
             "OrchardProtocol",
@@ -67,6 +72,7 @@ var targets: [Target] = [
             "OrchardSwarm",
             "OrchardRouter",
             "OrchardCrypto",
+            "OrchardTransport",
             "OrchardProtocol",
         ]
     ),
@@ -93,6 +99,10 @@ var targets: [Target] = [
     .testTarget(
         name: "OrchardPilotTests",
         dependencies: ["OrchardPilot", "OrchardProtocol"]
+    ),
+    .testTarget(
+        name: "OrchardTransportTests",
+        dependencies: ["OrchardTransport", "OrchardSwarm", "OrchardProtocol"]
     ),
 ]
 
