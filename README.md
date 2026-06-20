@@ -36,8 +36,10 @@ See [`DESIGN.md`](./DESIGN.md) for the full architecture and [`docs/`](./docs) f
 
 ## Status
 
-🚧 **Concept / skeleton.** This repository is an architecture blueprint and scaffolding. No
-production node runtime ships yet. See the [roadmap](./DESIGN.md#roadmap).
+🌱 **M1 — single-node runtime landed.** The `OrchardProtocol` + `OrchardNode` packages ship a
+`NodeRuntime` actor that gates work behind the opportunistic scheduler and runs structured-output
+inference via Apple's Foundation Models on OS 26+ (with a deterministic stub fallback elsewhere).
+The architecture blueprint is still evolving — see the [roadmap](./DESIGN.md#roadmap).
 
 ## Quick start
 
@@ -45,7 +47,18 @@ production node runtime ships yet. See the [roadmap](./DESIGN.md#roadmap).
 just setup     # install toolchain + resolve packages
 just build     # build all targets
 just test      # run the test suite
+just demo      # run one task through a node (Foundation Models on OS 26+, else stub)
 just site      # preview the GitHub Pages site locally
+```
+
+`just demo` on an OS 26+ machine produces a real on-device structured summary:
+
+```json
+{
+  "title": "Apple Neural Engine Accelerates On-Device ML",
+  "summary": "The Apple Neural Engine enhances machine learning directly on devices…",
+  "topics": ["Apple", "Neural Engine", "On-Device ML", "Machine Learning"]
+}
 ```
 
 Requires macOS 26+ / Xcode 26+ for the on-device Foundation Models APIs. See [`TOOLS.md`](./TOOLS.md).
@@ -54,15 +67,22 @@ Requires macOS 26+ / Xcode 26+ for the on-device Foundation Models APIs. See [`T
 
 ```
 orchard/
-├── DESIGN.md          # Architecture & system design
-├── TOOLS.md           # Toolchain, frameworks, dependencies
-├── AGENTS.md          # Guidance for AI coding agents
-├── CLAUDE.md          # Claude Code working agreement
-├── justfile           # Task runner
-├── docs/              # GitHub Pages site
-├── packages/          # Swift package targets (node, swarm, crypto, router)
-└── .github/           # CI + Pages workflow
+├── DESIGN.md                    # Architecture & system design
+├── TOOLS.md                     # Toolchain, frameworks, dependencies
+├── AGENTS.md                    # Guidance for AI coding agents
+├── CLAUDE.md                    # Claude Code working agreement
+├── justfile                     # Task runner
+├── Package.swift                # SwiftPM manifest
+├── Sources/
+│   ├── OrchardProtocol/         # Wire types, task specs, structured-output schemas
+│   ├── OrchardNode/             # Node runtime, scheduler, Foundation Models adapter
+│   └── orchard-demo/            # Single-node demo executable
+├── Tests/                       # Swift Testing suites
+├── docs/                        # GitHub Pages site
+└── .github/                     # CI + Pages workflows
 ```
+
+Future packages (`OrchardSwarm`, `OrchardCrypto`, `OrchardRouter`) land in later milestones.
 
 ## License
 

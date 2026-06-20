@@ -123,8 +123,11 @@ See [`TOOLS.md`](./TOOLS.md) for the concrete frameworks behind each.
 
 ## 9. Roadmap
 
-- [ ] **M0 — Skeleton** (this repo): docs, package layout, CI, Pages.
-- [ ] **M1 — Single-node runtime**: opportunistic scheduler + AFM structured-output task.
+- [x] **M0 — Skeleton** (this repo): docs, package layout, CI, Pages.
+- [x] **M1 — Single-node runtime**: opportunistic scheduler + AFM structured-output task.
+      Packages `OrchardProtocol` + `OrchardNode`, a `NodeRuntime` actor gating work behind the
+      opportunistic scheduler, a Foundation Models adapter (real on-device inference on OS 26+)
+      with a deterministic stub fallback, and the `orchard-demo` executable. Run `just demo`.
 - [ ] **M2 — Micro-swarm**: LAN discovery + two-device layer sharding via MLX.
 - [ ] **M3 — Global tasks**: Task Router stub, redundant assignment, consensus merge.
 - [ ] **M4 — Privacy layer**: SecAgg + DP on a federated training round.

@@ -1,0 +1,17 @@
+disabled_rules:
+  - todo
+  - trailing_comma
+
+excluded:
+  - .build
+  - docs
+
+line_length:
+  warning: 140
+  error: 200
+
+identifier_name:
+  min_length: 1
+
+type_name:
+  min_length: 2

@@ -39,6 +39,10 @@ format:
 format-check:
     @command -v swiftformat >/dev/null && swiftformat --lint . || echo "ℹ️  swiftformat not installed — skipping"
 
+# Run the single-node demo (uses Foundation Models on OS 26+, else the stub engine)
+demo: build
+    .build/debug/orchard-demo
+
 # The full check CI runs
 ci: build test lint format-check
     @echo "✅ ci complete"
