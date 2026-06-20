@@ -1,5 +1,7 @@
 # 🌳 Orchard
 
+[![CI](https://github.com/asmuelle/orchard/actions/workflows/ci.yml/badge.svg)](https://github.com/asmuelle/orchard/actions/workflows/ci.yml)
+
 > A decentralized, privacy-preserving swarm-intelligence network powered entirely by idle Apple devices.
 
 Orchard turns millions of idle iPhones, iPads, and Macs into a cooperative supercomputing
